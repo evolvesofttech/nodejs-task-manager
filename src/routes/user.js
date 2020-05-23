@@ -36,4 +36,13 @@ router.get('/users', auth, async (req, res) => {
     }
 })
 
+//Get logged in user profile
+router.get('/users/me', auth, (req, res) => {
+    try {
+        res.status(200).send(req.user);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+})
+
 module.exports = router;
