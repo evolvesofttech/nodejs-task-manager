@@ -18,9 +18,27 @@ router.post('/tasks', auth, async (req, res) => {
 })
 
 //Get all tasks of logged in user
+//tasks?completed=true&limit=5&skip=0&sortBy=createdAt&sortOrder=desc
 router.get('/tasks', auth, async (req, res) => {
+
+    const match = {}
+
+    if (req.query.completed) {
+        match.completed = req.query.completed === "true"
+    }
+
     try {
-        await req.user.populate('tasks').execPopulate();
+        await req.user.populate({
+            path: "tasks",
+            match,
+            options: {
+                limit: parseInt(req.query.limit),
+                skip: parseInt(req.query.skip),
+                sort: {
+                    [req.query.sortBy]: req.query.sortOrder === 'asc' ? 1 : -1
+                }
+            }
+        }).execPopulate();
         res.status(200).send(req.user.tasks);
     } catch (error) {
         res.status(500).send(error);
