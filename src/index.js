@@ -9,7 +9,7 @@ const port = process.env.PORT || 4000;
 
 app.use(express.json());
 app.use(userRouter);
-
+//added comment
 app.listen(port, () => {
     console.log("Server is up on port: ", port);
 })
